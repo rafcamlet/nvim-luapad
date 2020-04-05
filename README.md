@@ -38,5 +38,7 @@ Just run command `Luapad` for scratchpad in new window or `LuapadThis` to enable
 ### TODO
 - [ ] Command to disable Luapad
 - [ ] Sandbox mode with potentially dangerous functions disabled
-- [ ] Find way to handle infinite loops
+- [x] Find way to handle infinite loops
+- [ ] Describe infinite loops handling in readme
+- [ ] Add configuration options
 - [ ] Error indicator

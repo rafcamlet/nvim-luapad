@@ -23,6 +23,22 @@ local context = {
 }
 setmetatable(context, { __index = _G })
 
+local function timeout_call(fun)
+  local tick_count = 0
+  success, result = pcall( function()
+    local tick = function()
+      tick_count = tick_count + 1
+
+      if tick_count > 1.5 * 1e5 then
+        tick_count = 0
+        error('LuapadTimeoutError')
+      end
+    end
+    debug.sethook(tick, "c", 1)
+    fun()
+  end)
+  debug.sethook()
+end
 
 local function luapad()
   captured_print_output = {}
@@ -32,7 +48,7 @@ local function luapad()
   if not f then return end
 
   setfenv(f, context)
-  pcall(f)
+  timeout_call(f)
 
   vim.api.nvim_buf_clear_namespace(0, ns, 0, -1)
   for i,v in ipairs(captured_print_output) do
@@ -42,15 +58,19 @@ local function luapad()
       tonumber(v['line']) - 1,
       {{tostring(v['arg']), 'Comment'}},
       {}
-    )
+      )
   end
 end
 
 function init_luapad(new_window)
-  if new_window then api.nvim_command('rightbelow vnew') end
+  if new_window then
+    api.nvim_command('rightbelow vnew')
+    api.nvim_buf_set_option(0, 'buftype', 'nofile')
+    api.nvim_buf_set_option(0, 'swapfile', false)
+  end
   api.nvim_buf_set_option(0, 'filetype', 'lua')
   api.nvim_buf_set_option(0, 'bufhidden', 'wipe')
-  api.nvim_buf_set_name(0, '  Luapad')
+  -- api.nvim_buf_set_name(0, '  Luapad')
 
   vim.api.nvim_command [[autocmd CursorHold   <buffer> lua require'luapad'.luapad()]]
   vim.api.nvim_command [[autocmd TextChanged  <buffer> lua require'luapad'.luapad()]]
