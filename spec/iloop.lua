@@ -1,11 +1,18 @@
 local t = require 'spec/test'
 
 t.setup()
-t.open('spec/fixtures/iloop.lua')
 
-t.send("';LuapadThis' c-m")
+t.command('Luapad')
+t.command('only')
+t.input("iprint('')")
+t.typein("<left><left>asdf!'<esc>")
 
--- t.sleep(1)
--- t.send("c-[ Go")
--- t.send([["print('')" left left]])
--- t.typein("test test test 123")
+t.input('o<cr>')
+
+t.input([[
+while true do<cr>
+print('x')<cr>
+end
+]])
+
+t.finish()
