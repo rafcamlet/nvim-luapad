@@ -53,7 +53,7 @@ local function tcall(fun)
       local line, error_msg = parse_error(result)
       Statusline:set_msg(('%s: %s'):format((line or ''), (error_msg or '')))
 
-      if error_indicator then
+      if error_indicator and line then
         vim.api.nvim_buf_set_virtual_text(
           0, ns, tonumber(line) - 1, {{tostring('<-- ' .. error_msg), 'ErrorMsg'}}, {}
           )
