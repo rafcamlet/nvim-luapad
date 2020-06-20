@@ -14,7 +14,7 @@ local function pad_print(...)
   local arg = {...}
   local str = {}
 
-  for i,v in ipairs(arg) do
+  for _,v in ipairs(arg) do
     table.insert(str, tostring(vim.inspect(v):gsub("\n", '')))
   end
 
@@ -65,6 +65,7 @@ local function tcall(fun)
 end
 
 local function luapad()
+  vim.api.nvim_buf_set_option(0, 'modified', false)
   count_limit = get_var('luapad__count_limit', 1.5 * 1e5)
   error_indicator = get_bool_var('luapad__error_indicator', true)
   Statusline:clear()
@@ -76,7 +77,7 @@ local function luapad()
 
   local f, result = loadstring(table.concat(code, '\n'))
   if not f then
-    local line, msg = parse_error(result)
+    local _, msg = parse_error(result)
     Statusline:set_status('syntax')
     Statusline:set_msg(msg)
     return
@@ -85,7 +86,7 @@ local function luapad()
   setfenv(f, context)
   tcall(f)
 
-  for i,v in ipairs(captured_print_output) do
+  for _,v in ipairs(captured_print_output) do
     vim.api.nvim_buf_set_virtual_text(
       0,
       ns,
@@ -99,7 +100,6 @@ end
 local function init_luapad()
   api.nvim_command('botright vnew')
   api.nvim_buf_set_name(0, '__Luapad__ ' .. api.nvim_get_current_buf())
-  api.nvim_buf_set_option(0, 'buftype', 'nofile')
   api.nvim_buf_set_option(0, 'swapfile', false)
   api.nvim_buf_set_option(0, 'filetype', 'lua.luapad')
   api.nvim_buf_set_option(0, 'bufhidden', 'wipe')

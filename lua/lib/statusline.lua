@@ -2,8 +2,8 @@ local Statusline = {}
 local prefix = 'luapad__'
 
 function Statusline:clear()
-  self:set_msg(nil)
-  self:set_status(nil)
+  self:set_msg()
+  self:set_status()
 end
 
 function Statusline:set_msg(v)
