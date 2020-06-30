@@ -94,5 +94,5 @@ Luapad divides errors on 3 categories:
 - [x] Add configuration options
 - [x] Error indicator
 - [x] Lightline integration
-- [ ] Restore global env between each code evaluation
+- [x] Restore context between each code evaluation
 - [ ] Update gifs

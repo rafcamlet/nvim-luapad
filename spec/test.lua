@@ -35,46 +35,56 @@ local function setup()
     'tmux split-window -h -d -p 30',
     ('tmux send-keys -t 1 "nvim --listen %s" C-m'):format(address)
   }
-  for i,v in ipairs(arr) do
-    os.execute(v)
-  end
+  for _,v in ipairs(arr) do os.execute(v) end
   sleep(1)
   connection = vim.api.nvim_call_function('sockconnect', {'tcp', address, {rpc = true}})
 end
 
+
+local function nvim(str, ...)
+  return vim.api.nvim_call_function('rpcrequest', {connection, "nvim_" .. str, unpack({...})})
+end
+
 local function finish()
   vim.api.nvim_call_function('chanclose', {connection})
+  print('Connection closed')
 end
 
 local function command(str)
-  vim.api.nvim_call_function('rpcrequest', {connection, "nvim_command", str})
+  nvim('command', str)
 end
 
 local function input(str)
-  -- command('set insertmode')
-  vim.api.nvim_call_function('rpcrequest', {connection, "nvim_input", str})
+  nvim('input', str)
 end
 
 local function typein(str)
   -- command('set insertmode')
-  for i, v in ipairs(split_keys(str)) do
+  for _, v in ipairs(split_keys(str)) do
     input(v)
     sleep(0.1)
   end
 end
 
 local function exec_lua(str)
-  vim.api.nvim_call_function('rpcrequest', {connection, "nvim_exec_lua", str})
+  nvim('exec_lua', str)
 end
 
 local function exec(str)
-  vim.api.nvim_call_function('rpcrequest', {connection, "nvim_exec", str, false})
+  nvim('exec', str, false)
 end
 
-local function test(callback)
-  setup()
-  callback()
-  finish()
+local function set_lines(start, finish, arr)
+  if type(arr) == 'string' then arr = vim.split(arr, "\n") end
+  nvim('buf_set_lines', 0, start, finish, false, arr)
+end
+
+local function get_lines(start, finish)
+  return nvim('buf_get_lines', 0, start, finish, false)
+end
+
+local function get_virtual_text(line)
+  return nvim('buf_get_virtual_text', 0, line)
 end
 
 return {
@@ -83,8 +93,11 @@ return {
   input = input,
   typein = typein,
   command = command,
-  test = test,
   sleep = sleep,
   exec_lua = exec_lua,
   exec = exec,
+  set_lines = set_lines,
+  get_lines = get_lines,
+  nvim = nvim,
+  get_virtual_text = get_virtual_text
 }

@@ -8,7 +8,6 @@ local ns = vim.api.nvim_create_namespace('luapad_namespace')
 local captured_print_output = {}
 local count_limit, error_indicator
 
-
 local function pad_print(...)
   if ... == nil then return end
   local arg = {...}
@@ -23,12 +22,6 @@ local function pad_print(...)
       line = debug.traceback('', 2):match(':(%d*):')
     })
 end
-
-local context = {
-  p = pad_print,
-  print = pad_print
-}
-setmetatable(context, { __index = _G })
 
 local function tcall(fun)
   local tick_count = 0
@@ -65,6 +58,9 @@ local function tcall(fun)
 end
 
 local function luapad()
+  local context = { p = pad_print, print = pad_print }
+  setmetatable(context, { __index = _G})
+
   vim.api.nvim_buf_set_option(0, 'modified', false)
   count_limit = get_var('luapad__count_limit', 1.5 * 1e5)
   error_indicator = get_bool_var('luapad__error_indicator', true)
