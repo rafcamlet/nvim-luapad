@@ -39,13 +39,13 @@ Just run command `Luapad`.
 
 | Name                    | Default value | Description                                                                                                                                                                                      |
 | ---                     | ---           | ---                                                                                                                                                                                              |
-| luapad__count_limit     | 150000        | Luapad uses count hook method to preventing infinite loops during code execution. Setting count_limit too high will make Luapad laggy, setting it too low, may cause premature code termination. |
+| luapad__count_limit     | 200000        | Luapad uses count hook method to preventing infinite loops during code execution. Setting count_limit too high will make Luapad laggy, setting it too low, may cause premature code termination. |
 | luapad__error_indicator | 1             | Show virtual text with error message (except syntax or timeout errors)                                                                                                                          |
 
 Example configuration
 
 ```
-let g:luapad__count_limit = 200000
+let g:luapad__count_limit = 150000
 let g:luapad__error_indicator = 0
 ```
 
@@ -96,3 +96,5 @@ Luapad divides errors on 3 categories:
 - [x] Lightline integration
 - [x] Restore context between each code evaluation
 - [ ] Update gifs
+- [ ] Doc for LuaRun
+- [ ] Doc for preview

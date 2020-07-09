@@ -47,7 +47,6 @@ end
 
 local function finish()
   vim.api.nvim_call_function('chanclose', {connection})
-  print('Connection closed')
 end
 
 local function command(str)

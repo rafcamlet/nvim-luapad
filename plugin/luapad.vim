@@ -7,6 +7,7 @@ let s:save_cpo = &cpo
 set cpo&vim
 
 command! Luapad lua require'luapad'.init_luapad()
+command! RunLua lua require'luapad'.run_lua()
 
 let &cpo = s:save_cpo
 unlet s:save_cpo

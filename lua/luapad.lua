@@ -3,22 +3,75 @@ local get_var =  require'lib/tools'.get_var
 local get_bool_var =  require'lib/tools'.get_bool_var
 local parse_error = require'lib/tools'.parse_error
 local api = vim.api
+local preview_win
 
 local ns = vim.api.nvim_create_namespace('luapad_namespace')
 local captured_print_output = {}
 local count_limit, error_indicator
 
+local function close_preview()
+  if preview_win and vim.api.nvim_win_is_valid(preview_win) then
+    vim.api.nvim_win_close(preview_win, false)
+  end
+end
+
+local function preview()
+  local line = vim.api.nvim_win_get_cursor(0)[1]
+  local found
+
+  for _, v in ipairs(captured_print_output) do
+    if tonumber(v['line']) == line then found = v end
+  end
+
+  if not found then return end
+
+  local buf = vim.api.nvim_create_buf(false, true)
+  vim.api.nvim_buf_set_option(buf, 'bufhidden', 'wipe')
+  vim.api.nvim_buf_set_option(buf, 'filetype', 'lua')
+
+  local content = vim.split(table.concat(vim.tbl_flatten(found['arg']), "\n"), "\n")
+  vim.api.nvim_buf_set_lines(buf, 0, -1, false, content)
+
+  local lines = tonumber(vim.api.nvim_win_get_height(0)) - 10
+  local cols = tonumber(vim.api.nvim_win_get_width(0))
+  if vim.api.nvim_call_function('screenrow', {}) >= lines then lines = 0 end
+
+  if preview_win and vim.api.nvim_win_is_valid(preview_win) then
+    vim.api.nvim_win_set_buf(preview_win, buf)
+    return
+  end
+
+  preview_win = vim.api.nvim_open_win(buf, false, {
+      relative = 'win',
+      col = 0,
+      row = lines,
+      height = 10,
+      width = cols - 1,
+      style = 'minimal'
+    })
+  vim.api.nvim_win_set_option(preview_win, 'signcolumn', 'no')
+end
+
+
+local function single_line(arr)
+  local result = {}
+  for _, v in ipairs(arr) do
+    table.insert(result, '  ' .. v:gsub("\n", ''))
+  end
+  return table.concat(result, ', ')
+end
+
 local function pad_print(...)
-  if ... == nil then return end
+  if not ... then return end
   local arg = {...}
   local str = {}
 
   for _,v in ipairs(arg) do
-    table.insert(str, tostring(vim.inspect(v):gsub("\n", '')))
+    table.insert(str, tostring(vim.inspect(v)))
   end
 
   table.insert(captured_print_output, {
-      arg = '  ' .. table.concat(str, ', '),
+      arg = str,
       line = debug.traceback('', 2):match(':(%d*):')
     })
 end
@@ -57,12 +110,21 @@ local function tcall(fun)
   debug.sethook()
 end
 
+local function run_lua()
+  local context = {}
+  setmetatable(context, { __index = _G})
+  local code = vim.api.nvim_buf_get_lines(0, 0, -1, {})
+  local f = loadstring(table.concat(code, '\n'))
+  if not f then return end
+  success, result = pcall(f)
+  if not success then print(result) end
+end
+
 local function luapad()
   local context = { p = pad_print, print = pad_print }
   setmetatable(context, { __index = _G})
 
-  vim.api.nvim_buf_set_option(0, 'modified', false)
-  count_limit = get_var('luapad__count_limit', 1.5 * 1e5)
+  count_limit = get_var('luapad__count_limit', 2 * 1e5)
   error_indicator = get_bool_var('luapad__error_indicator', true)
   Statusline:clear()
 
@@ -87,23 +149,33 @@ local function luapad()
       0,
       ns,
       tonumber(v['line']) - 1,
-      {{tostring(v['arg']), 'Comment'}},
+      {{single_line(v['arg']), 'Comment'}},
       {}
       )
   end
+
+  -- vim.api.nvim_buf_set_option(0, 'modified', false)
 end
 
 local function init_luapad()
   api.nvim_command('botright vnew')
-  api.nvim_buf_set_name(0, '__Luapad__ ' .. api.nvim_get_current_buf())
+  api.nvim_buf_set_name(0, 'Luapad #' .. api.nvim_get_current_buf())
   api.nvim_buf_set_option(0, 'swapfile', false)
   api.nvim_buf_set_option(0, 'filetype', 'lua.luapad')
   api.nvim_buf_set_option(0, 'bufhidden', 'wipe')
+  api.nvim_command('au CursorHold <buffer> lua require("luapad").preview()')
+  api.nvim_command('au CursorMoved <buffer> lua require("luapad").close_preview()')
 
-  vim.api.nvim_buf_attach(0, false, { on_lines = luapad })
+  vim.api.nvim_buf_attach(0, false, {
+      on_lines = luapad,
+      on_changedtick = luapad
+    })
 end
 
 return {
   init_luapad = init_luapad,
-  luapad = luapad
+  luapad = luapad,
+  run_lua = run_lua,
+  preview = preview,
+  close_preview = close_preview
 }
