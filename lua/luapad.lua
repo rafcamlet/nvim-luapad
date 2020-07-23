@@ -1,7 +1,7 @@
-local Statusline = require 'lib/statusline'
-local get_var =  require'lib/tools'.get_var
-local get_bool_var =  require'lib/tools'.get_bool_var
-local parse_error = require'lib/tools'.parse_error
+local Statusline = require 'luapad/statusline'
+local get_var =  require'luapad/tools'.get_var
+local get_bool_var =  require'luapad/tools'.get_bool_var
+local parse_error = require'luapad/tools'.parse_error
 local api = vim.api
 local preview_win
 
