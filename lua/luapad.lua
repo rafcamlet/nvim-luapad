@@ -110,16 +110,6 @@ local function tcall(fun)
   debug.sethook()
 end
 
-local function run_lua()
-  local context = {}
-  setmetatable(context, { __index = _G})
-  local code = vim.api.nvim_buf_get_lines(0, 0, -1, {})
-  local f = loadstring(table.concat(code, '\n'))
-  if not f then return end
-  success, result = pcall(f)
-  if not success then print(result) end
-end
-
 local function luapad()
   local context = { p = pad_print, print = pad_print }
   setmetatable(context, { __index = _G})
@@ -175,7 +165,6 @@ end
 return {
   init_luapad = init_luapad,
   luapad = luapad,
-  run_lua = run_lua,
   preview = preview,
   close_preview = close_preview
 }

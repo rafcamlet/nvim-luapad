@@ -97,4 +97,5 @@ Luapad divides errors on 3 categories:
 - [x] Restore context between each code evaluation
 - [ ] Update gifs
 - [ ] Doc for LuaRun
+  [ ] Doc for Lua
 - [ ] Doc for preview
