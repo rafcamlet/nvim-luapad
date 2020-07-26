@@ -1,4 +1,4 @@
-local t = require 'spec/test'
+local t = require 'spec/test_lib'
 
 t.setup()
 t.command('Luapad')
@@ -9,7 +9,7 @@ while true do
   print('wow')
 end
 ]])
-assert(t.get_virtual_text(1)[1][1]:match('wow'))
-assert(t.nvim('get_var', 'luapad__status') == 'timeout')
+t.assert(t.match(t.get_virtual_text(1)[1][1], 'wow'))
+t.assert(t.eq(t.nvim('get_var', 'luapad__status'), 'timeout'))
 
 t.finish()

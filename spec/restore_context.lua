@@ -1,4 +1,4 @@
-local t = require 'spec/test'
+local t = require 'spec/test_lib'
 
 t.setup()
 
@@ -14,16 +14,13 @@ end
 asdf()
 ]])
 
-assert(#t.get_virtual_text(3) > 0, 'It should have virutal text')
+t.assert(#t.get_virtual_text(3) > 0, 'It should have virutal text')
 
 t.set_lines(2,5, {'', '', ''})
 t.command('1')
 t.set_lines(0,1, 'a = 30')
 
-assert(#t.get_virtual_text(3) == 0, 'It should not have virutal text')
-assert(
-  t.nvim('get_var', 'luapad__msg'):match("attempt to call global 'asdf'"),
-  'It should rise error'
-  )
+t.assert(#t.get_virtual_text(3) == 0, 'It should not have virutal text')
+t.assert(t.match(t.nvim('get_var', 'luapad__msg'), "attempt to call global 'asdf'"))
 
 t.finish()

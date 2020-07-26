@@ -1,10 +1,4 @@
-local function tbl_keys(t)
-  local keys = {}
-  for k, _ in pairs(t) do
-    table.insert(keys, k)
-  end
-  return keys
-end
+local tbl_keys = require'luapad/tools'.tbl_keys
 
 local function completion_search(s_arr, prefix, r_arr)
   if #s_arr == 0 then return end
