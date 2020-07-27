@@ -11,7 +11,9 @@ local count_limit, error_indicator
 
 local function close_preview()
   if preview_win and vim.api.nvim_win_is_valid(preview_win) then
-    vim.api.nvim_win_close(preview_win, false)
+    vim.schedule(function()
+      vim.api.nvim_win_close(preview_win, false)
+    end)
   end
 end
 
@@ -155,10 +157,12 @@ local function init_luapad()
   api.nvim_buf_set_option(0, 'bufhidden', 'wipe')
   api.nvim_command('au CursorHold <buffer> lua require("luapad").preview()')
   api.nvim_command('au CursorMoved <buffer> lua require("luapad").close_preview()')
+  api.nvim_command('au QuitPre <buffer> set nomodified')
 
   vim.api.nvim_buf_attach(0, false, {
       on_lines = luapad,
-      on_changedtick = luapad
+      on_changedtick = luapad,
+      on_detach = close_preview
     })
 end
 
