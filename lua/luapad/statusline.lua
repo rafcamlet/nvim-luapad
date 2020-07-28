@@ -1,5 +1,5 @@
 local Statusline = {}
-local prefix = 'luapad__'
+local prefix = 'luapad_'
 
 function Statusline:clear()
   self:set_msg()

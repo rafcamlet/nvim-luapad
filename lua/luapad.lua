@@ -1,7 +1,6 @@
 local Statusline = require 'luapad/statusline'
-local get_var =  require'luapad/tools'.get_var
-local get_bool_var =  require'luapad/tools'.get_bool_var
 local parse_error = require'luapad/tools'.parse_error
+local Config = require'luapad/config'
 local api = vim.api
 local preview_win
 
@@ -10,14 +9,16 @@ local captured_print_output = {}
 local count_limit, error_indicator
 
 local function close_preview()
-  if preview_win and vim.api.nvim_win_is_valid(preview_win) then
-    vim.schedule(function()
+  vim.schedule(function()
+    if preview_win and vim.api.nvim_win_is_valid(preview_win) then
       vim.api.nvim_win_close(preview_win, false)
-    end)
-  end
+    end
+  end)
 end
 
 local function preview()
+  if not Config.preview then return end
+
   local line = vim.api.nvim_win_get_cursor(0)[1]
   local found
 
@@ -116,8 +117,9 @@ local function luapad()
   local context = { p = pad_print, print = pad_print }
   setmetatable(context, { __index = _G})
 
-  count_limit = get_var('luapad__count_limit', 2 * 1e5)
-  error_indicator = get_bool_var('luapad__error_indicator', true)
+  count_limit = Config.count_limit
+  error_indicator = Config.error_indicator
+
   Statusline:clear()
 
   vim.api.nvim_buf_clear_namespace(0, ns, 0, -1)
@@ -145,8 +147,6 @@ local function luapad()
       {}
       )
   end
-
-  -- vim.api.nvim_buf_set_option(0, 'modified', false)
 end
 
 local function init_luapad()
@@ -160,8 +160,8 @@ local function init_luapad()
   api.nvim_command('au QuitPre <buffer> set nomodified')
 
   vim.api.nvim_buf_attach(0, false, {
-      on_lines = luapad,
-      on_changedtick = luapad,
+      on_lines = vim.schedule_wrap(luapad),
+      on_changedtick = vim.schedule_wrap(luapad),
       on_detach = close_preview
     })
 end

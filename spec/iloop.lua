@@ -10,6 +10,6 @@ while true do
 end
 ]])
 t.assert(t.match(t.get_virtual_text(1)[1][1], 'wow'))
-t.assert(t.eq(t.nvim('get_var', 'luapad__status'), 'timeout'))
+t.assert(t.eq(t.nvim('get_var', 'luapad_status'), 'timeout'))
 
 t.finish()

@@ -1,4 +1,5 @@
 local tbl_keys = require'luapad/tools'.tbl_keys
+local inspect = vim.inspect
 
 local function completion_search(s_arr, prefix, r_arr)
   if #s_arr == 0 then return end
@@ -12,7 +13,10 @@ local function completion_search(s_arr, prefix, r_arr)
   end
 
   local result = {}
-  for _, v in ipairs(tbl_keys(r_arr)) do
+  local keys = tbl_keys(r_arr)
+  table.sort(keys)
+
+  for _, v in ipairs(keys) do
     local regex = '^' .. string.gsub(head, '%*', '.*')
     if v:find(regex) then table.insert(result, prefix .. v) end
   end

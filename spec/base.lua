@@ -27,7 +27,7 @@ end
 wow(1, 2, 3, 'aaa')
 ]])
 t.assert(t.match(t.get_virtual_text(4)[1][1], '{ 1, 2, 3, "aaa" }'))
-t.assert(t.eq(t.nvim('get_var', 'luapad__status'), 'ok'))
+t.assert(t.eq(t.nvim('get_var', 'luapad_status'), 'ok'))
 
 --
 
@@ -39,7 +39,7 @@ local virtual_text2 = t.get_virtual_text(9)[1]
 t.assert(t.match(virtual_text2[1], "attempt to concatenate a nil value"))
 t.assert(t.eq(virtual_text2[2], "ErrorMsg"))
 
-t.assert(t.eq(t.nvim('get_var', 'luapad__status'), 'error'))
-t.assert(t.match(t.nvim('get_var', 'luapad__msg'), 'attempt to concatenate a nil value'))
+t.assert(t.eq(t.nvim('get_var', 'luapad_status'), 'error'))
+t.assert(t.match(t.nvim('get_var', 'luapad_msg'), 'attempt to concatenate a nil value'))
 
 t.finish()

@@ -39,14 +39,14 @@ Just run command `Luapad`.
 
 | Name                    | Default value | Description                                                                                                                                                                                      |
 | ---                     | ---           | ---                                                                                                                                                                                              |
-| luapad__count_limit     | 200000        | Luapad uses count hook method to preventing infinite loops during code execution. Setting count_limit too high will make Luapad laggy, setting it too low, may cause premature code termination. |
-| luapad__error_indicator | 1             | Show virtual text with error message (except syntax or timeout errors)                                                                                                                          |
+| luapad_count_limit     | 200000        | Luapad uses count hook method to preventing infinite loops during code execution. Setting count_limit too high will make Luapad laggy, setting it too low, may cause premature code termination. |
+| luapad_error_indicator | 1             | Show virtual text with error message (except syntax or timeout errors)                                                                                                                          |
 
 Example configuration
 
 ```
-let g:luapad__count_limit = 150000
-let g:luapad__error_indicator = 0
+let g:luapad_count_limit = 150000
+let g:luapad_error_indicator = 0
 ```
 
 ### Statusline
@@ -76,7 +76,7 @@ let g:lightline = {
       \ }
 ```
 
-But you can also create your own integration, using exposed viml global variables: `g:luapad__status` and `g:luapad__msg`.
+But you can also create your own integration, using exposed viml global variables: `g:luapad_status` and `g:luapad_msg`.
 
 ### Types of errors
 
@@ -85,7 +85,7 @@ Luapad divides errors on 3 categories:
 | Error   | Description                                                                                                  |
 | ---     | ---                                                                                                          |
 | SYNTAX  | Content of buffer is not valid lua script (you will see it a lot during typing)                              |
-| TIMEOUT | Interpreter has done more count instructions than luapad__count_limit, so there probably was a infinite loop |
+| TIMEOUT | Interpreter has done more count instructions than luapad_count_limit, so there probably was a infinite loop |
 | ERROR   | Execution logical errors                                                                                     |
 
 ### TODO
@@ -97,5 +97,5 @@ Luapad divides errors on 3 categories:
 - [x] Restore context between each code evaluation
 - [ ] Update gifs
 - [ ] Doc for LuaRun
-  [ ] Doc for Lua
+- [ ] Doc for Lua
 - [ ] Doc for preview

@@ -21,6 +21,6 @@ t.command('1')
 t.set_lines(0,1, 'a = 30')
 
 t.assert(#t.get_virtual_text(3) == 0, 'It should not have virutal text')
-t.assert(t.match(t.nvim('get_var', 'luapad__msg'), "attempt to call global 'asdf'"))
+t.assert(t.match(t.nvim('get_var', 'luapad_msg'), "attempt to call global 'asdf'"))
 
 t.finish()
