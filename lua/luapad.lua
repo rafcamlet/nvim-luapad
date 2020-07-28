@@ -157,6 +157,7 @@ local function init_luapad()
   api.nvim_buf_set_option(0, 'bufhidden', 'wipe')
   api.nvim_command('au CursorHold <buffer> lua require("luapad").preview()')
   api.nvim_command('au CursorMoved <buffer> lua require("luapad").close_preview()')
+  api.nvim_command('au CursorMovedI <buffer> lua require("luapad").close_preview()')
   api.nvim_command('au QuitPre <buffer> set nomodified')
 
   vim.api.nvim_buf_attach(0, false, {

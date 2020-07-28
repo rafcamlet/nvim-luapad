@@ -2,18 +2,17 @@
 
 Luapad run your code in context with overwritten print function and display the captured input as virtual text right there, where it was called - **in real time!**
 
-![Luapad print gif](/gifs/luapad-print.gif)
+![Luapad print gif](/gifs/luapad_new.gif)
+
+![Luapad function gif](/gifs/luapad_colors.gif)
 
 -------
 
-![Luapad function gif](/gifs/luapad-function.gif)
+Luapad adds Lua command (as native lua command extension) with deep function completion.
+
+![Luapad nvim.split gif](/gifs/luapad_lua.gif)
 
 -------
-
-You can use build-in neovim functions
-
-![Luapad nvim.split gif](/gifs/luapad-split.gif)
-
 
 # WARNING!!!
 
@@ -33,7 +32,10 @@ With vim-plug:
 
 ### Usage
 
-Just run command `Luapad`.
+Luapadd provide three different commands, which will help you with developing neovim plugins in lua:
+  - **Luapad** - which open interactive scratch buffer with real time evaluation.
+  - **LuaRun** - which run content of current buffer as lua script in new scope. You do not need to write file to disc or have to worry about overwriting functions in global scope. 
+  - **Lua** - which is extension of native lua command with function completion.
 
 ### Configuration
 
@@ -41,12 +43,15 @@ Just run command `Luapad`.
 | ---                     | ---           | ---                                                                                                                                                                                              |
 | luapad_count_limit     | 200000        | Luapad uses count hook method to preventing infinite loops during code execution. Setting count_limit too high will make Luapad laggy, setting it too low, may cause premature code termination. |
 | luapad_error_indicator | 1             | Show virtual text with error message (except syntax or timeout errors)                                                                                                                          |
+| luapad_preview         | 1             | Show floating output window on cursor hold. It's a good idea to set low update time. For example: `let &updatetime = 300` You can jump to it by `^w` `w`   |
+
 
 Example configuration
 
 ```
 let g:luapad_count_limit = 150000
 let g:luapad_error_indicator = 0
+let g:luapad_preview = 0
 ```
 
 ### Statusline
@@ -90,12 +95,11 @@ Luapad divides errors on 3 categories:
 
 ### TODO
 - [ ] Sandbox mode with potentially dangerous functions disabled
-- [x] Find way to handle infinite loops
-- [x] Add configuration options
-- [x] Error indicator
-- [x] Lightline integration
-- [x] Restore context between each code evaluation
-- [ ] Update gifs
-- [ ] Doc for LuaRun
-- [ ] Doc for Lua
-- [ ] Doc for preview
+
+
+### Shameless self promotion
+
+If you want to start your adventure with writing lua plugins and are you are wondering where to begin, you can take a look at the links below.
+
+1. [How to write neovim plugins in Lua](https://www.2n.pl/blog/how-to-write-neovim-plugins-in-lua)
+2. [How to make UI for neovim plugins in Lua](https://www.2n.pl/blog/how-to-make-ui-for-neovim-plugins-in-lua)
