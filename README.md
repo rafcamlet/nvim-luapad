@@ -1,6 +1,6 @@
 # Interactive neovim scratchpad for lua
 
-Luapad run your code in context with overwritten print function and display the captured input as virtual text right there, where it was called - **in real time!**
+Luapad runs your code in context with overwritten print function and displays the captured input as virtual text right there, where it was called - **in real time!**
 
 ![Luapad print gif](/gifs/luapad_new.gif)
 
@@ -32,7 +32,7 @@ With vim-plug:
 
 ### Usage
 
-Luapadd provide three different commands, which will help you with developing neovim plugins in lua:
+Luapadd provides three different commands, that will help you with developing neovim plugins in lua:
   - **Luapad** - which open interactive scratch buffer with real time evaluation.
   - **LuaRun** - which run content of current buffer as lua script in new scope. You do not need to write file to disc or have to worry about overwriting functions in global scope. 
   - **Lua** - which is extension of native lua command with function completion.
@@ -41,7 +41,7 @@ Luapadd provide three different commands, which will help you with developing ne
 
 | Name                    | Default value | Description                                                                                                                                                                                      |
 | ---                     | ---           | ---                                                                                                                                                                                              |
-| luapad_count_limit     | 200000        | Luapad uses count hook method to preventing infinite loops during code execution. Setting count_limit too high will make Luapad laggy, setting it too low, may cause premature code termination. |
+| luapad_count_limit     | 200000        | Luapad uses count hook method to prevent infinite loops occurring during code execution. Setting count_limit too high will make Luapad laggy, setting it too low, may cause premature code termination. |
 | luapad_error_indicator | 1             | Show virtual text with error message (except syntax or timeout errors)                                                                                                                          |
 | luapad_preview         | 1             | Show floating output window on cursor hold. It's a good idea to set low update time. For example: `let &updatetime = 300` You can jump to it by `^w` `w`   |
 
@@ -85,7 +85,7 @@ But you can also create your own integration, using exposed viml global variable
 
 ### Types of errors
 
-Luapad divides errors on 3 categories:
+Luapad separates errors into 3 categories:
 
 | Error   | Description                                                                                                  |
 | ---     | ---                                                                                                          |
