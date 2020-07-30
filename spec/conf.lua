@@ -1,23 +1,18 @@
-local t = require 'spec/test_lib'
+local t = require 'spec/test_helper'
 
-local function is_indicator_visible()
+TestConfig = t.new_group()
+
+function TestConfig:testErrorIndicator()
+  t.exec('let g:luapad_error_indicator = 1')
+  t.set_lines(0, -1, 'local a = b + c')
   local indicator = t.get_virtual_text(0)[1]
-  return indicator and indicator[1]:match('attempt to perform arithmetic on.*a nil value')
+
+  t.assert_not_nil(indicator)
+  t.assert_str_contains(indicator[1], 'attempt to perform arithmetic on.*a nil value', true)
+
+  t.exec('let g:luapad_error_indicator = 0')
+  t.set_lines(0, -1, 'local d = e + f')
+
+  indicator = t.get_virtual_text(0)[1]
+  t.assert_nil(indicator)
 end
-
-t.setup()
-
-t.command('Luapad')
-t.command('only')
-
-t.exec('let g:luapad_error_indicator = 1')
-t.set_lines(0, -1, 'local a = b + c')
-
-t.assert(is_indicator_visible(), 'Error indicator is not visible!')
-
-t.exec('let g:luapad_error_indicator = 0')
-t.set_lines(0, -1, 'local d = e + f')
-
-t.assert(not is_indicator_visible(), 'Error indicator is visible!')
-
-t.finish()
