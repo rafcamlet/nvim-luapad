@@ -59,7 +59,7 @@ end
 local function single_line(arr)
   local result = {}
   for _, v in ipairs(arr) do
-    table.insert(result, '  ' .. v:gsub("\n", ''))
+    table.insert(result, '  ' .. v:gsub("\n", ''):gsub(' +', ' '))
   end
   return table.concat(result, ', ')
 end
@@ -80,17 +80,8 @@ local function pad_print(...)
 end
 
 local function tcall(fun)
-  local tick_count = 0
-  success, result = pcall( function()
-    local tick = function()
-      tick_count = tick_count + 1
-
-      if tick_count > count_limit then
-        tick_count = 0
-        error('LuapadTimeoutError')
-      end
-    end
-    debug.sethook(tick, "c", 1)
+  success, result = pcall(function()
+    debug.sethook(function() error('LuapadTimeoutError') end, "", count_limit)
     fun()
   end)
 
