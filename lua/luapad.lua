@@ -80,6 +80,7 @@ local function pad_print(...)
 end
 
 local function tcall(fun)
+  if count_limit < 1000 then count_limit = 1000 end
   success, result = pcall(function()
     debug.sethook(function() error('LuapadTimeoutError') end, "", count_limit)
     fun()
