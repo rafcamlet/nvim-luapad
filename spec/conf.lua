@@ -1,8 +1,8 @@
 local t = require 'spec/test_helper'
 
-TestConfig = t.new_group()
+test_config = t.new_group()
 
-function TestConfig:testErrorIndicator()
+function test_config.test_error_indicator()
   t.exec('let g:luapad_error_indicator = 1')
   t.set_lines(0, -1, 'local a = b + c')
   local indicator = t.get_virtual_text(0)[1]

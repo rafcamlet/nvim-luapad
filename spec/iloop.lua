@@ -2,7 +2,7 @@ local t = require 'spec/test_helper'
 
 test_iloop = t.new_group()
 
-function test_iloop:test()
+function test_iloop.test()
   t.set_lines(0,0, [[
 while true do
   print('wow')

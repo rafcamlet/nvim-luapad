@@ -1,5 +1,5 @@
 local tbl_keys = require'luapad/tools'.tbl_keys
-local inspect = vim.inspect
+local inspect = vim.inspect -- luacheck: ignore
 
 local function completion_search(s_arr, prefix, r_arr)
   if #s_arr == 0 then return end

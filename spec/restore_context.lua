@@ -2,7 +2,7 @@ local t = require 'spec/test_helper'
 
 test_restore_context = t.new_group()
 
-function test_restore_context:test()
+function test_restore_context.test()
   t.set_lines(0,0,[[
 a = 5
 
