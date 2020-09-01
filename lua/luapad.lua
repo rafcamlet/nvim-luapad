@@ -20,19 +20,15 @@ local function preview()
   if not Config.preview then return end
 
   local line = vim.api.nvim_win_get_cursor(0)[1]
-  local found
 
-  for _, v in ipairs(captured_print_output) do
-    if tonumber(v['line']) == line then found = v end
-  end
-
-  if not found then return end
+  if not captured_print_output[line] then return end
 
   local buf = vim.api.nvim_create_buf(false, true)
   vim.api.nvim_buf_set_option(buf, 'bufhidden', 'wipe')
   vim.api.nvim_buf_set_option(buf, 'filetype', 'lua')
 
-  local content = vim.split(table.concat(vim.tbl_flatten(found['arg']), "\n"), "\n")
+  local content = vim.split( table.concat(vim.tbl_flatten(captured_print_output[line]), "\n"), "\n")
+
   vim.api.nvim_buf_set_lines(buf, 0, -1, false, content)
 
   local lines = tonumber(vim.api.nvim_win_get_height(0)) - 10
@@ -59,7 +55,8 @@ end
 local function single_line(arr)
   local result = {}
   for _, v in ipairs(arr) do
-    table.insert(result, '  ' .. v:gsub("\n", ''):gsub(' +', ' '))
+    local str = v:gsub("\n", ''):gsub(' +', ' ')
+    table.insert(result, str)
   end
   return table.concat(result, ', ')
 end
@@ -73,10 +70,15 @@ local function pad_print(...)
     table.insert(str, tostring(vim.inspect(v)))
   end
 
-  table.insert(captured_print_output, {
-      arg = str,
-      line = debug.traceback('', 2):match(':(%d*):')
-    })
+  local line = debug.traceback('', 2):match(':(%d*):')
+  if not line then return end
+  line = tonumber(line)
+
+  if not captured_print_output[line] then
+    captured_print_output[line] = {}
+  end
+
+  table.insert(captured_print_output[line], str)
 end
 
 local function tcall(fun)
@@ -130,12 +132,18 @@ local function luapad()
   setfenv(f, context)
   tcall(f)
 
-  for _,v in ipairs(captured_print_output) do
+  for line, arr in pairs(captured_print_output) do
+    local res = {}
+
+    for _, v in ipairs(arr) do
+      table.insert(res, single_line(v))
+    end
+
     vim.api.nvim_buf_set_virtual_text(
       0,
       ns,
-      tonumber(v['line']) - 1,
-      {{single_line(v['arg']), 'Comment'}},
+      line - 1,
+      {{'  ' .. table.concat(res, ' | '), 'Comment'}},
       {}
       )
   end
