@@ -95,7 +95,7 @@ function TestHelper.new_group()
     setUp = function()
       TestHelper.setup()
       TestHelper.command('Luapad')
-      TestHelper.command('only')
+      -- TestHelper.command('only')
     end,
     tearDown = function()
       TestHelper.finish()
