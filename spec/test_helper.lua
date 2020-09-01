@@ -69,8 +69,8 @@ function TestHelper.typein(str)
   end
 end
 
-function TestHelper.exec_lua(str)
-  TestHelper.nvim('exec_lua', str)
+function TestHelper.exec_lua(str, args)
+  return TestHelper.nvim('exec_lua', str, args or {})
 end
 
 function TestHelper.exec(str)
@@ -87,7 +87,11 @@ function TestHelper.get_lines(start, finish)
 end
 
 function TestHelper.get_virtual_text(line)
-  return TestHelper.nvim('buf_get_virtual_text', 0, line)
+  local ns = vim.api.nvim_create_namespace('luapad_namespace')
+  local result = TestHelper.nvim('buf_get_extmarks', 0, ns, {line, 0}, {line, -1}, { details = true })
+
+  if #result == 0 then return end
+  return result[1][#result[1]]["virt_text"][1]
 end
 
 function TestHelper.new_group()
