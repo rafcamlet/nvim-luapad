@@ -98,7 +98,7 @@ local function tcall(fun)
 
       if error_indicator and line then
         vim.api.nvim_buf_set_virtual_text(
-          0, ns, tonumber(line) - 1, {{tostring('<-- ' .. error_msg), 'ErrorMsg'}}, {}
+          0, ns, tonumber(line) - 1, {{tostring('<-- ' .. error_msg), Config.error_highlight}}, {}
           )
       end
     end
@@ -143,7 +143,7 @@ local function luapad()
       0,
       ns,
       line - 1,
-      {{'  ' .. table.concat(res, ' | '), 'Comment'}},
+      {{'  ' .. table.concat(res, ' | '), Config.print_highlight}},
       {}
       )
   end

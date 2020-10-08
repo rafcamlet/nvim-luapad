@@ -14,7 +14,9 @@ local Config = {
   default = {
     preview = true,
     error_indicator = true,
-    count_limit = 2 * 1e5
+    count_limit = 2 * 1e5,
+    print_highlight = 'Comment',
+    error_highlight = 'ErrorMsg'
   },
   meta = {}
 }
