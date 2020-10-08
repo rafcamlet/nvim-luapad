@@ -41,9 +41,11 @@ Luapadd provides three different commands, that will help you with developing ne
 
 | Name                    | Default value | Description                                                                                                                                                                                      |
 | ---                     | ---           | ---                                                                                                                                                                                              |
-| luapad_count_limit     | 200000        | Luapad uses count hook method to prevent infinite loops occurring during code execution. Setting count_limit too high will make Luapad laggy, setting it too low, may cause premature code termination. |
-| luapad_error_indicator | 1             | Show virtual text with error message (except syntax or timeout errors)                                                                                                                          |
-| luapad_preview         | 1             | Show floating output window on cursor hold. It's a good idea to set low update time. For example: `let &updatetime = 300` You can jump to it by `^w` `w`   |
+| luapad_count_limit      | 200000        | Luapad uses count hook method to prevent infinite loops occurring during code execution. Setting count_limit too high will make Luapad laggy, setting it too low, may cause premature code termination. |
+| luapad_error_indicator  | 1             | Show virtual text with error message (except syntax or timeout errors)                                                                                                                          |
+| luapad_preview          | 1             | Show floating output window on cursor hold. It's a good idea to set low update time. For example: `let &updatetime = 300` You can jump to it by `^w` `w`   |
+| luapad_print_highlight  | 'Comment'     | Highlight group used to coloring luapad print output |
+| luapad_error_highlight  | 'ErrorMsg'    | Highlight group used to coloring luapad error indicator |
 
 
 Example configuration
@@ -52,6 +54,10 @@ Example configuration
 let g:luapad_count_limit = 150000
 let g:luapad_error_indicator = 0
 let g:luapad_preview = 0
+let g:luapad_error_highlight = 'WarningMsg'
+
+hi MyCustomLuapadOutputColor ctermfg=2
+let g:luapad_print_highlight = 'MyCustomLuapadOutputColor'
 ```
 
 ### Statusline
