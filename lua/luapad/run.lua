@@ -1,5 +1,5 @@
 local function run(opts)
-  local context = opts.context or {}
+  local context = opts and opts.context or {}
   setmetatable(context, { __index = _G})
   local code = vim.api.nvim_buf_get_lines(0, 0, -1, {})
   local f = loadstring(table.concat(code, '\n'))
