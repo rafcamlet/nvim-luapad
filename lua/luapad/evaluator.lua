@@ -65,11 +65,14 @@ function Evaluator:tcall(fun)
 end
 
 function Evaluator:print(...)
-  if not ... then return end
+  local size = select('#', ...)
+  if size == 0 then return end
+
+  local args = {...}
   local str = {}
 
-  for _,v in ipairs({...}) do
-    table.insert(str, tostring(vim.inspect(v)))
+  for i=1, size do
+    table.insert(str, tostring(vim.inspect(args[i])))
   end
 
   local line = debug.traceback('', 3):match(':(%d*):')
