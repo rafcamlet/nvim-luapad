@@ -19,6 +19,6 @@ asdf()
   t.command('1')
   t.set_lines(0,1, 'a = 30')
 
-  t.assert_true(#t.get_virtual_text(3) == 0)
-  t.assert_str_contains(t.nvim('get_var', 'luapad_msg'), "attempt to call global 'asdf'")
+  t.assert_nil(t.get_virtual_text(3))
+  t.assert_str_contains(t.exec_lua('return require"luapad/statusline".msg()'), "attempt to call global 'asdf'")
 end

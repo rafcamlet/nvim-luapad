@@ -1,41 +1,25 @@
-local Statusline = {}
-local prefix = 'luapad_'
+local State = require 'luapad/state'
 
-function Statusline:clear()
-  self:set_msg()
-  self:set_status()
+local function status()
+  if State.current() then return State.current().statusline.status end
 end
 
-function Statusline:set_msg(v)
-  vim.api.nvim_set_var(prefix..'msg', v)
-  self.msg = v
+local function msg()
+  if State.current() then return State.current().statusline.msg end
 end
 
-function Statusline:set_status(v)
-  vim.api.nvim_set_var(prefix..'status', v or 'ok')
-  self.status = v
+
+local function lightline_status()
+  if status() then return string.upper(status()) else return '' end
 end
 
-function Statusline:lightline_status()
-  if not vim.api.nvim_buf_get_option(0, 'filetype'):match('luapad') then
-    return ''
-  end
-
-  local arr = {
-    error = 'ERROR',
-    syntax = 'SYNTAX',
-    timeout = 'TIMEOUT'
-  }
-  return arr[self.status] or 'OK'
+local function lightline_msg()
+  return msg() or ''
 end
 
-function Statusline:lightline_msg()
-  if not vim.api.nvim_buf_get_option(0, 'filetype'):match('luapad') then
-    return ''
-  end
-  return self.msg or ''
-end
-
-Statusline:clear()
-
-return Statusline
+return {
+  status = status,
+  msg = msg,
+  lightline_msg = lightline_msg,
+  lightline_status = lightline_status
+}
