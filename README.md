@@ -43,16 +43,16 @@ From version 0.2 luapad will move towards lua api exposure. Several useful funct
 require('luapad').init() -- same as Luapad command
 
 -- Creates a new luapad instance and attaches it to the current buffer.
--- Optionally, you can pass to it a context table, the elements of which will be
+-- Optionally, you can pass a context table to it, the elements of which will be
 -- available during the evaluation as "global" variables.
 require('luapad').attach({
   context = { return_4 =  function() return 4 end }
 })
 
--- Detach current luapad instance from buffer. Put simply, it just turns it off. :)
+-- Detaches current luapad instance from buffer, which just means turning it off. :)
 require('luapad').detach()
 
--- Toggle luapad in current buffer.
+-- Toggles luapad in current buffer.
 require('luapad').toggle({
   context = { return_4 =  function() return 4 end }
 })
@@ -69,7 +69,7 @@ require('luapad/evaluator'):new {
 -- to specify a context tbl
 require 'luapad/run'.run {
   context = {
-    print = function(str) print(string.upper(str)) end 
+    print = function(str) print(string.upper(str)) end
   }
 }
 
@@ -183,7 +183,7 @@ Luapad separates errors into 3 categories:
 ### Changelog
 #### v0.2
 
-- Better native lsp integration (now you should have lsp completion in luapad buffers)
+- Better nvim native lsp integration (now you should have lsp completion in luapad buffers)
 - Enable creation of multiple luapads instances
 - Allow luapad to be attached to an existing buffer
 - Add on_init callback
@@ -192,10 +192,7 @@ Luapad separates errors into 3 categories:
 - Add `eval_on_move` and `eval_on_change` settings
 - Expose luapad lua api
 - Replace `g:luapad_status` and `g:luapad_msg` variables by `status()` and `msg()` lua functions.
-
-
-### TODO
-- [ ] Sandbox mode with potentially dangerous functions disabled
+- Now luapad print function print also nil values
 
 
 ### Shameless self promotion
