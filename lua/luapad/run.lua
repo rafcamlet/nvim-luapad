@@ -1,12 +1,23 @@
+local parse_error = require'luapad/tools'.parse_error
+
+local function print_error(err)
+  local line_nr, msg = parse_error(err)
+  vim.api.nvim_command('echohl Error')
+  vim.api.nvim_command(('echomsg "error on line %s: %s"'):format(line_nr, msg))
+  vim.api.nvim_command('echohl None')
+end
+
 local function run(opts)
   local context = opts and opts.context or {}
   setmetatable(context, { __index = _G})
+
   local code = vim.api.nvim_buf_get_lines(0, 0, -1, {})
-  local f = loadstring(table.concat(code, '\n'))
+  local f, error_str = loadstring(table.concat(code, '\n'))
+  if not f then return print_error(error_str) end
+
   setfenv(f, context)
-  if not f then return end
-  success, result = pcall(f)
-  if not success then print(result) end
+  local success, result = pcall(f)
+  if not success then return print_error(result) end
 end
 
 return {
