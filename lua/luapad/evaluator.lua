@@ -75,7 +75,7 @@ function Evaluator:print(...)
     table.insert(str, tostring(vim.inspect(args[i])))
   end
 
-  local line = debug.traceback('', 3):match(':(%d*):')
+  local line = debug.traceback('', 3):match('^.-]:(%d-):')
   if not line then return end
   line = tonumber(line)
 
