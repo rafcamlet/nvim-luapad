@@ -13,9 +13,7 @@ end
 local sep = vim.api.nvim_call_function('has', {'win32'}) == 0 and '/' or '\\'
 
 local function path(...)
-  local str = debug.getinfo(2, "S").source:sub(2)
-  root = str:match(("(.*)lua%sluapad.lua"):format(sep))
-  return root .. table.concat({...}, (sep))
+  return vim.api.nvim_eval('tempname()')
 end
 
 local function create_file(f)
