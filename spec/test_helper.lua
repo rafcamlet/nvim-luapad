@@ -1,5 +1,3 @@
-local u = require 'luaunit'
-
 local TestHelper = {
   address = 'localhost:3333'
 }
@@ -42,6 +40,9 @@ function TestHelper.setup()
     'sockconnect',
     {'tcp', TestHelper.address, {rpc = true}}
     )
+
+  TestHelper.command('Luapad')
+  TestHelper.command('only')
 end
 
 
@@ -51,6 +52,7 @@ end
 
 function TestHelper.finish()
   vim.api.nvim_call_function('chanclose', {TestHelper.connection})
+  os.execute('tmux kill-pane -a')
 end
 
 function TestHelper.command(str)
@@ -87,26 +89,21 @@ function TestHelper.get_lines(start, finish)
 end
 
 function TestHelper.get_virtual_text(line)
-  local ns = vim.api.nvim_create_namespace('luapad_namespace')
+  local ns = TestHelper.nvim('create_namespace', 'luapad_namespace')
   local result = TestHelper.nvim('buf_get_extmarks', 0, ns, {line, 0}, {line, -1}, { details = true })
 
   if #result == 0 then return end
-  return result[1][#result[1]]["virt_text"][1]
+  return result[1][#result[1]]["virt_text"][1][1]
 end
 
-function TestHelper.new_group()
-  return {
-    setUp = function()
-      TestHelper.setup()
-      TestHelper.command('Luapad')
-      -- TestHelper.command('only')
-    end,
-    tearDown = function()
-      TestHelper.finish()
-    end
-  }
-end
+function TestHelper.print(...)
+  if #{...} > 1 then
+    io.stdout:write(tostring(vim.inspect({...})))
+  else
+    io.stdout:write(tostring(vim.inspect(...)))
+  end
 
-setmetatable(TestHelper, { __index = u })
+  io.stdout:write("\n")
+end
 
 return TestHelper
