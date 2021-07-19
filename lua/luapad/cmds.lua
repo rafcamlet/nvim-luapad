@@ -1,5 +1,5 @@
 local State = require('luapad/state')
-local Config = require'luapad/config'
+local Config = require'luapad/config'.config
 
 local function on_cursor_hold(buf)
   if Config.preview then State.instances[buf]:preview() end

@@ -1,4 +1,5 @@
-local Config = require 'luapad/config'
+local Config = require 'luapad/config'.config
+local set_config = require 'luapad/config'.set_config
 local State = require 'luapad/state'
 
 local parse_error = require'luapad/tools'.parse_error
@@ -165,7 +166,7 @@ function Evaluator:new(attrs)
   attrs.output = {}
   attrs.helper = {
     buf = attrs.buf,
-    config = Config.config
+    config = set_config
   }
 
   local obj = setmetatable(attrs, Evaluator)

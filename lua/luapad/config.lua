@@ -1,69 +1,46 @@
-local Config = {
-  prefix = 'luapad_',
-  only_lua = {
-    on_init = true,
-    context = true
-  },
-  bool_values = {
-    preview = true,
-    error_indicator = true,
-    eval_on_move = true,
-    eval_on_change = true
-  },
-  default = {
-    preview = true,
-    error_indicator = true,
-    count_limit = 2 * 1e5,
-    print_highlight = 'Comment',
-    error_highlight = 'ErrorMsg',
-    eval_on_move = false,
-    eval_on_change = true
-  },
-  lua_vault = {},
-  meta = {}
+local warning = [[[Luapad] Configure Luapad via vim globals is disabled. Please use \"require('luapad').config\".]]
+local print_warn =  require('luapad.tools').print_warn
+
+local deprecated_vars = {
+  'luapad_count_limit',
+  'luapad_error_indicator',
+  'luapad_preview',
+  'luapad_eval_on_change',
+  'luapad_eval_on_move',
+  'luapad_print_highlight',
+  'luapad_error_highlight',
 }
 
-local function get_var(key)
-  s, v = pcall(vim.api.nvim_get_var, key)
-  if s then return v end
-end
+local function vim_config_disabled_warn()
+  local warn_flag = false
 
-local function set_var(key, value)
-  if Config.bool_values[key] then
-    if value then value = 1 else value = 0 end
+  for _, var in ipairs(deprecated_vars) do
+    local s, v = pcall(vim.api.nvim_get_var, var)
+    if s and v then warn_flag = true end
   end
-  vim.api.nvim_set_var(Config.prefix .. key, value)
+
+  if warn_flag then print_warn(warning) end
 end
 
+local Config = {
+  on_init = nil,
+  context = nil,
 
-Config.meta.__index = function(self, key)
-  if Config.only_lua[key] then return Config.lua_vault[key] end
+  preview = true,
+  error_indicator = true,
+  count_limit = 2 * 1e5,
+  print_highlight = 'Comment',
+  error_highlight = 'ErrorMsg',
+  eval_on_move = false,
+  eval_on_change = true
+}
 
-  local vim_key = self.prefix .. key
-
-  if self.bool_values[key] then
-    local v = get_var(vim_key)
-    if v and tonumber(v) == 0 then return false end
-    return v or self.default[key]
-  else
-    return get_var(vim_key) or self.default[key]
-  end
+local function set_config(opts)
+  for k, v in pairs(opts) do Config[k] = v end
 end
 
-Config.meta.__newindex = function(self, key, value)
-  if Config.only_lua[key] then
-    Config.lua_vault[key] = value
-    return
-  end
-  set_var(key, value)
-end
-
-Config.config = function(tbl)
-  for k, v in pairs(tbl) do
-    Config[k] = v
-  end
-end
-
-setmetatable(Config, Config.meta)
-
-return Config
+return {
+  config = Config,
+  set_config = set_config,
+  vim_config_disabled_warn = vim_config_disabled_warn
+}

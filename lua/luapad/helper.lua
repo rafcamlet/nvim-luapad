@@ -1,4 +1,5 @@
-local Config = require'luapad/config'
+local Config = require'luapad/config'.config
+local set_config = require'luapad/config'.set_config
 
 local Helper = {}
 
@@ -45,7 +46,7 @@ function Helper.new(start_buf)
   return Helper
 end
 
-Helper.config = Config.config
+Helper.config = set_config
 
 return Helper
 

@@ -1,4 +1,7 @@
-local Config = require'luapad/config'
+local Config = require'luapad/config'.config
+local set_config = require'luapad/config'.set_config
+local vim_config_disabled_warn = require'luapad/config'.vim_config_disabled_warn
+
 local Evaluator = require'luapad/evaluator'
 local State = require 'luapad/state'
 local path = require 'luapad/tools'.path
@@ -8,6 +11,8 @@ local remove_file = require 'luapad/tools'.remove_file
 local GCounter = 0
 
 local function init()
+  vim_config_disabled_warn()
+
   GCounter = GCounter + 1
   local file_path = path('tmp', 'Luapad_' .. GCounter .. '.lua')
 
@@ -46,7 +51,7 @@ return {
   attach = attach,
   detach = detach,
   toggle = toggle,
-  config = Config.config,
+  config = set_config,
   current = State.current,
   version = '0.2'
 }
