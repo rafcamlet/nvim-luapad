@@ -1,5 +1,5 @@
-local print_error = require'luapad/tools'.print_error
-local parse_error = require'luapad/tools'.parse_error
+local print_error = require'luapad.tools'.print_error
+local parse_error = require'luapad.tools'.parse_error
 
 local function print_run_error(err)
   local line_nr, msg = parse_error(err)

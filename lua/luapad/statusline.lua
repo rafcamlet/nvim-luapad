@@ -1,4 +1,4 @@
-local State = require 'luapad/state'
+local State = require 'luapad.state'
 
 local function status()
   if State.current() then return State.current().statusline.status end

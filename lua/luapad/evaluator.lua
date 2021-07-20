@@ -1,8 +1,8 @@
-local Config = require 'luapad/config'.config
-local set_config = require 'luapad/config'.set_config
-local State = require 'luapad/state'
+local Config = require 'luapad.config'.config
+local set_config = require 'luapad.config'.set_config
+local State = require 'luapad.state'
 
-local parse_error = require'luapad/tools'.parse_error
+local parse_error = require'luapad.tools'.parse_error
 
 local ns = vim.api.nvim_create_namespace('luapad_namespace')
 

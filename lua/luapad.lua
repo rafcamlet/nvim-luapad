@@ -1,12 +1,12 @@
-local Config = require'luapad/config'.config
-local set_config = require'luapad/config'.set_config
-local vim_config_disabled_warn = require'luapad/config'.vim_config_disabled_warn
+local Config = require'luapad.config'.config
+local set_config = require'luapad.config'.set_config
+local vim_config_disabled_warn = require'luapad.config'.vim_config_disabled_warn
 
-local Evaluator = require'luapad/evaluator'
-local State = require 'luapad/state'
-local path = require 'luapad/tools'.path
-local create_file = require 'luapad/tools'.create_file
-local remove_file = require 'luapad/tools'.remove_file
+local Evaluator = require'luapad.evaluator'
+local State = require 'luapad.state'
+local path = require 'luapad.tools'.path
+local create_file = require 'luapad.tools'.create_file
+local remove_file = require 'luapad.tools'.remove_file
 
 local GCounter = 0
 

@@ -1,5 +1,5 @@
-local Config = require'luapad/config'.config
-local set_config = require'luapad/config'.set_config
+local Config = require'luapad.config'.config
+local set_config = require'luapad.config'.set_config
 
 local Helper = {}
 
