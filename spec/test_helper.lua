@@ -1,5 +1,6 @@
 local TestHelper = {
-  address = 'localhost:3333'
+  address = '/tmp/luapad_nvim_socket',
+  nr = 10
 }
 
 function TestHelper.sleep(n)
@@ -31,28 +32,38 @@ end
 function TestHelper.setup()
   local arr = {
     'tmux kill-pane -a -t 0',
-    'tmux split-window -h -d -p 30',
-    ('tmux send-keys -t 1 "nvim --listen %s" C-m'):format(TestHelper.address)
+    'tmux split-window -h -d -p 30'
   }
-  for _,v in ipairs(arr) do os.execute(v) end
-  TestHelper.sleep(1)
-  TestHelper.connection = vim.api.nvim_call_function(
-    'sockconnect',
-    {'tcp', TestHelper.address, {rpc = true}}
-    )
+
+  if os.execute 'tmux has-session -t .1 2>/dev/null' ~= 0 then
+    for _,v in ipairs(arr) do os.execute(v) end
+  end
+end
+
+
+function TestHelper.restart()
+  TestHelper.nr = TestHelper.nr + 1
+  local cmd = ('tmux respawn-pane -k -t .1 "nvim --listen %s"'):format(TestHelper.address .. TestHelper.nr)
+  os.execute(cmd)
+
+  repeat
+    TestHelper.sleep(0.2)
+    local ok, val = pcall(vim.fn.sockconnect, 'pipe', TestHelper.address .. TestHelper.nr, {rpc = true})
+    TestHelper.connection = val
+  until(ok)
 
   TestHelper.command('Luapad')
-  TestHelper.command('only')
+  TestHelper.command('only!')
 end
 
 
 function TestHelper.nvim(str, ...)
-  return vim.api.nvim_call_function('rpcrequest', {TestHelper.connection, "nvim_" .. str, unpack({...})})
+  return vim.rpcrequest(TestHelper.connection, "nvim_" .. str, unpack({...}))
 end
 
 function TestHelper.finish()
+  pcall(vim.rpcrequest, TestHelper.connection, 'nvim_command', 'qa!')
   vim.api.nvim_call_function('chanclose', {TestHelper.connection})
-  os.execute('tmux kill-pane -a')
 end
 
 function TestHelper.command(str)

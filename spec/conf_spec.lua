@@ -2,14 +2,15 @@ local t = require 'spec/test_helper'
 
 describe("config", function()
 
+  t.setup()
+
   before_each(function()
-    t.setup()
+    t.restart()
   end)
 
   local set_config = function(opts)
     t.exec_lua([[require'luapad'.config(...)]], {opts})
   end
-
 
   it('handel error_indicator setting', function ()
     local vt
@@ -30,5 +31,5 @@ describe("config", function()
     assert.is.Nil(vt)
   end)
 
-  -- t.finish()
+  t.finish()
 end)

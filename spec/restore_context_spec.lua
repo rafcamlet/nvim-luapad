@@ -2,8 +2,9 @@ local t = require 'spec/test_helper'
 
 describe("context", function()
 
+  t.setup()
   before_each(function()
-    t.setup()
+    t.restart()
   end)
 
 

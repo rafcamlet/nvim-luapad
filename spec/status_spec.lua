@@ -2,8 +2,10 @@ local t = require 'spec/test_helper'
 
 describe("status", function()
 
+  t.setup()
+
   before_each(function()
-    t.setup()
+    t.restart()
   end)
 
   local status = function()

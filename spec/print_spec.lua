@@ -2,8 +2,10 @@ local t = require 'spec/test_helper'
 
 describe("print", function()
 
+  t.setup()
+
   before_each(function()
-    t.setup()
+    t.restart()
   end)
 
   it("prints virtual text", function()

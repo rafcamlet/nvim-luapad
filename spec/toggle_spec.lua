@@ -2,8 +2,10 @@ local t = require 'spec/test_helper'
 
 describe("toggle", function()
 
+  t.setup()
+
   before_each(function()
-    t.setup()
+    t.restart()
   end)
 
 
