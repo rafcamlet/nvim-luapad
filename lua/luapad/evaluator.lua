@@ -139,22 +139,24 @@ function Evaluator:preview()
 
   local lines = tonumber(vim.api.nvim_win_get_height(0)) - 10
   local cols = tonumber(vim.api.nvim_win_get_width(0))
-  if vim.api.nvim_call_function('screenrow', {}) >= lines then lines = 0 end
+  if vim.fn.screenrow() >= lines then lines = 0 end
+
+  local opts = {
+    relative = 'win',
+    col = 0,
+    row = lines,
+    height = 10,
+    width = cols,
+    style = 'minimal'
+  }
 
   if self.preview_win and vim.api.nvim_win_is_valid(self.preview_win) then
     vim.api.nvim_win_set_buf(self.preview_win, buf)
-    return
+    vim.api.nvim_win_set_config(self.preview_win, opts)
+  else
+    self.preview_win = vim.api.nvim_open_win(buf, false, opts)
+    vim.api.nvim_win_set_option(self.preview_win, 'signcolumn', 'no')
   end
-
-  self.preview_win = vim.api.nvim_open_win(buf, false, {
-      relative = 'win',
-      col = 0,
-      row = lines,
-      height = 10,
-      width = cols - 1,
-      style = 'minimal'
-    })
-  vim.api.nvim_win_set_option(self.preview_win, 'signcolumn', 'no')
 end
 
 function Evaluator:new(attrs)
