@@ -21,8 +21,6 @@ local function non_paraller_test_directory(directory)
 
   local paths = harness._find_files_to_run(directory)
 
-  local path_len = #paths
-
   local failure = false
 
   local jobs = vim.tbl_map(
@@ -37,24 +35,17 @@ local function non_paraller_test_directory(directory)
         command = vim.v.progpath,
         args = args,
 
-        -- Can be turned on to debug
         on_stdout = function(_, data)
-          if path_len == 1 then
-            outputter(res.bufnr, data)
-          end
+          outputter(res.bufnr, data)
         end,
 
         on_stderr = function(_, data)
-          if path_len == 1 then
-            outputter(res.bufnr, data)
-          end
+          outputter(res.bufnr, data)
         end,
 
         on_exit = vim.schedule_wrap(function(j_self, _, _)
-          if path_len ~= 1 then
-            outputter(res.bufnr, unpack(j_self:stderr_result()))
-            outputter(res.bufnr, unpack(j_self:result()))
-          end
+          outputter(res.bufnr, unpack(j_self:stderr_result()))
+          outputter(res.bufnr, unpack(j_self:result()))
 
           vim.cmd('mode')
         end)
@@ -67,7 +58,6 @@ local function non_paraller_test_directory(directory)
 
   log.debug("Running...")
   for i, j in ipairs(jobs) do
-    outputter(res.bufnr, "Scheduling: " .. j.nvim_busted_path)
     j:start()
     log.debug("... Sequential wait for job number", i)
     Job.join(j,50000)
