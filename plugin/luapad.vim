@@ -7,7 +7,7 @@ let s:save_cpo = &cpo
 set cpo&vim
 
 command! Luapad lua require'luapad'.init()
-command! LuaRun lua require'luapad/run'.run()
+command! LuaRun lua require'luapad.run'.run()
 
 function! Luapd_lua_complete (ArgLead, CmdLine, CursorPos) abort
   return luaeval('require"luapad/completion"(_A)', a:ArgLead)

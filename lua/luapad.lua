@@ -1,4 +1,3 @@
-local Config = require'luapad.config'.config
 local set_config = require'luapad.config'.set_config
 local vim_config_disabled_warn = require'luapad.config'.vim_config_disabled_warn
 
@@ -17,9 +16,9 @@ local function init()
   local file_path = path('tmp', 'Luapad_' .. GCounter .. '.lua')
 
   -- hacky solution to deal with native lsp
+  remove_file(file_path)
   create_file(file_path)
   vim.api.nvim_command('botright vsplit ' .. file_path)
-  remove_file(file_path)
 
   local buf = vim.api.nvim_get_current_buf()
 
@@ -52,6 +51,7 @@ return {
   detach = detach,
   toggle = toggle,
   config = set_config,
+  setup = set_config,
   current = State.current,
   version = '0.2'
 }
