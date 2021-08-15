@@ -35,7 +35,7 @@ With vim-plug:
 Luapadd provides three different commands, that will help you with developing neovim plugins in lua:
   - **Luapad** - which open interactive scratch buffer with real time evaluation.
   - **LuaRun** - which run content of current buffer as lua script in new scope. You do not need to write file to disc or have to worry about overwriting functions in global scope. 
-  - **Lua** - which is extension of native lua command with function completion.
+  - ~~**Lua** - which is extension of native lua command with function completion.~~ *This command will be removed in the next release, because the current version of Neovim has built-in cmd completion.*
 
 From version 0.2 luapad will move towards lua api exposure. Several useful functions are already available.
 
@@ -60,30 +60,30 @@ require('luapad').toggle({
 -- You can also create new luapad instance by yourself, which can be helpfull if you
 -- want to attach it to a buffer different than the current one.
 local buffer_handler = 5
-require('luapad/evaluator'):new {
+require('luapad.evaluator'):new {
   buf = buffer_handler,
   context = { a = 'asdf' }
 }:start()
 
 -- luapad/run offers a run function (same as the LuaRun command) but allows you
 -- to specify a context tbl
-require 'luapad/run'.run {
+require 'luapad.run'.run {
   context = {
     print = function(str) print(string.upper(str)) end
   }
 }
 
 -- If you turn off evaluation on change (and move) you can trigger it manualy by:
-local luapad = require('luapad/evaluator'):new{buf = vim.api.nvim_get_current_buf()}
+local luapad = require('luapad.evaluator'):new{buf = vim.api.nvim_get_current_buf()}
 luapad:start()
 luapad:eval()
 
 -- You can always access current luapad instance by:
-local luapad = require 'luapad/state'.current()
+local luapad = require 'luapad.state'.current()
 luapad:eval()
 
 -- ...or iterate through all instances
-for _, v in ipairs(require('luapad/state').instances) do
+for _, v in ipairs(require('luapad.state').instances) do
   v:eval()
 end
 ```
@@ -91,29 +91,28 @@ end
 
 ### Configuration
 
-There are currently two ways to configure luapad: via global viml variables (this method will be deprecated in next version) and via the ``luapad.config`` function (preferred way). The configuration is global and affects all luapad instances (but this is likely to change in future versions). All viml variables uses `luapad_`  prefix, so `count_limit` option will be `g:luapad_count_limit`. Config via lua has priority over viml.
+You can configure luapad via `require('luapad').setup({})` function (or its alias `config`). Configuration via vim globals is disabled. If you want to use old configuration method, please checkout version 0.2.
 
 
-| Name                    | Lua default value | Vim default value        | Description                                                                                                                                                                                             |
-| ---                     | ---               | ---                  | ---                                                                                                                                                                                                     |
-| count_limit             | 200000            | 200000               | Luapad uses count hook method to prevent infinite loops occurring during code execution. Setting count_limit too high will make Luapad laggy, setting it too low, may cause premature code termination. |
-| error_indicator         | true              | 1                    | Show virtual text with error message (except syntax or timeout errors)                                                                                                                                  |
-| preview                 | true              | 1                    | Show floating output window on cursor hold. It's a good idea to set low update time. For example: `let &updatetime = 300` You can jump to it by `^w` `w`                                                |
-| eval_on_change          | true              | 1                    | Evaluate buffer content when it changes |
-| eval_on_move            | false             | 0                    | Evaluate all luapad buffers when the cursor moves|
-| print_highlight         | 'Comment'         | 'Comment'            | Highlight group used to coloring luapad print output                                                                                                                                                    |
-| error_highlight         | 'ErrorMsg'        | 'ErrorMsg'           | Highlight group used to coloring luapad error indicator                                                                                                                                                 |
-| on_init                 | nil               | can't be set by viml | Callback function called after creating new luapad instance                                                                                                                                                                                                          |
-| context                 | {}                | can't be set by viml | The default context tbl in which luapad buffer is evaluated. Its properties will be available in buffer as "global" variables.
+| Name                    | default value | Description                                                                                                                                                                                             |
+| ---                     | ---               | ---                                                                                                                                                                                                     |
+| count_limit             | 200000            | Luapad uses count hook method to prevent infinite loops occurring during code execution. Setting count_limit too high will make Luapad laggy, setting it too low, may cause premature code termination. |
+| error_indicator         | true              | Show virtual text with error message (except syntax or timeout errors)                                                                                                                                  |
+| preview                 | true              | Show floating output window on cursor hold. It's a good idea to set low update time. For example: `let &updatetime = 300` You can jump to it by `^w` `w`                                                |
+| eval_on_change          | true              | Evaluate buffer content when it changes |
+| eval_on_move            | false             | Evaluate all luapad buffers when the cursor moves|
+| print_highlight         | 'Comment'         | Highlight group used to coloring luapad print output                                                                                                                                                    |
+| error_highlight         | 'ErrorMsg'        | Highlight group used to coloring luapad error indicator                                                                                                                                                 |
+| on_init                 | function          | Callback function called after creating new luapad instance                                                                                                                                                                                                          |
+| context                 | {}                | The default context tbl in which luapad buffer is evaluated. Its properties will be available in buffer as "global" variables.
 
 
 
 
 Example configuration
 
-``````lua
--- lua
-require 'luapad'.config{
+```lua
+require('luapad').setup{
   count_limit = 150000,
   error_indicator = false,
   eval_on_move = true,
@@ -126,26 +125,15 @@ require 'luapad'.config{
     shout = function(str) return(string.upper(str) .. '!') end
   }
 }
-``````
-
-```
-" viml
-let g:luapad_count_limit = 150000
-let g:luapad_error_indicator = 0
-let g:luapad_preview = 0
-let g:luapad_error_highlight = 'WarningMsg'
-
-hi MyCustomLuapadOutputColor ctermfg=2
-let g:luapad_print_highlight = 'MyCustomLuapadOutputColor'
 ```
 
 ### Statusline
 
 Luapad has ready to use lightline function_components.
 
-Example lightline configuration:
-
-```viml
+<details>
+<summary>Example lightline configuration:</summary>
+<pre>
 let g:lightline = {
       \ 'active': {
       \   'left': [
@@ -164,9 +152,41 @@ let g:lightline = {
       \   'luapad_status': 'luapad#lightline_status',
       \ },
       \ }
-```
+</pre>
+</details>
+<br>
 
-But you can also create your own integration, using lua functions  `require'luapad/statusline'.status()` and `require'luapad/statusline'.msg()`.
+
+But you can also create your own integration, using lua functions  `require'luapad.statusline'.status()` and `require'luapad.statusline'.msg()`.
+
+
+<details>
+<summary>Example galaxyline configuration:</summary>
+<pre>
+local function luapad_color()
+  if require('luapad.statusline').status() == 'ok' then
+    return colors.green
+  else
+    return colors.red
+  end
+end
+</pre>
+
+<pre>
+require('galaxyline').section.right[1] = {
+  Luapad = {
+    condition = require('luapad.state').current,
+    highlight = { luapad_color(), colors.bg },
+    provider = function()
+      vim.cmd('hi GalaxyLuapad guifg=' .. luapad_color())
+      local status = require('luapad.statusline').status()
+      return string.upper(tostring(status))
+    end
+  }
+}
+</pre>
+</details>
+<br>
 
 
 ### Types of errors
@@ -181,6 +201,15 @@ Luapad separates errors into 3 categories:
 
 
 ### Changelog
+#### v0.3
+
+- Drop viml configuration
+- Improve preview window resizing (although it still needs some work)
+- Fix "file no longer available" error
+- Galaxyline example added to readme
+- Upgrading specs
+- Other minor upgrades and refactor
+
 #### v0.2
 
 - Better nvim native lsp integration (now you should have lsp completion in luapad buffers)

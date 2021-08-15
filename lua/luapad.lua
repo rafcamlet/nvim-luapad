@@ -53,5 +53,5 @@ return {
   config = set_config,
   setup = set_config,
   current = State.current,
-  version = '0.2'
+  version = '0.3'
 }
