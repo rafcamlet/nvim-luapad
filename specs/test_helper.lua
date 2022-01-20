@@ -1,3 +1,4 @@
+local Job = require'plenary.job'
 local TestHelper = {
   address = vim.fn.tempname() .. '_luapad_nvim_socket',
   nr = 10
@@ -30,6 +31,7 @@ function TestHelper.split_keys(str)
 end
 
 function TestHelper.setup()
+  if os.getenv("HEADLESS") == 'true' then return end
   local arr = {
     'tmux kill-pane -a -t 0',
     'tmux split-window -h -d -p 30'
@@ -43,8 +45,20 @@ end
 
 function TestHelper.restart()
   TestHelper.nr = TestHelper.nr + 1
-  local cmd = ('tmux respawn-pane -k -t .1 "nvim --clean -u specs/minimal_init.vim --listen %s"'):format(TestHelper.address .. TestHelper.nr)
-  os.execute(cmd)
+  local address = TestHelper.address .. TestHelper.nr
+
+  if os.getenv("HEADLESS") == 'true' then
+
+    if TestHelper.job then TestHelper.job:shutdown() end
+
+    TestHelper.job = Job:new({
+      command = 'nvim',
+      args = { '--clean', '-u', 'specs/minimal_init.vim', '--listen', address },
+    }):start()
+  else
+    local cmd = ('tmux respawn-pane -k -t .1 "nvim --clean -u specs/minimal_init.vim --listen %s"'):format(address)
+    os.execute(cmd)
+  end
 
   repeat
     TestHelper.sleep(0.2)
@@ -54,6 +68,7 @@ function TestHelper.restart()
 
   TestHelper.command('Luapad')
   TestHelper.command('only!')
+
 end
 
 
