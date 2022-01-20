@@ -1,5 +1,5 @@
 local TestHelper = {
-  address = '/tmp/luapad_nvim_socket',
+  address = vim.fn.tempname() .. '_luapad_nvim_socket',
   nr = 10
 }
 
@@ -43,7 +43,7 @@ end
 
 function TestHelper.restart()
   TestHelper.nr = TestHelper.nr + 1
-  local cmd = ('tmux respawn-pane -k -t .1 "nvim --listen %s"'):format(TestHelper.address .. TestHelper.nr)
+  local cmd = ('tmux respawn-pane -k -t .1 "nvim --clean -u specs/minimal_init.vim --listen %s"'):format(TestHelper.address .. TestHelper.nr)
   os.execute(cmd)
 
   repeat

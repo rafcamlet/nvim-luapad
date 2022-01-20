@@ -1,4 +1,4 @@
-local t = require 'spec/test_helper'
+local t = require 'specs.test_helper'
 
 describe("print", function()
 
