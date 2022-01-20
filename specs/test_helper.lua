@@ -48,13 +48,13 @@ function TestHelper.restart()
   local address = TestHelper.address .. TestHelper.nr
 
   if os.getenv("HEADLESS") == 'true' then
-
     if TestHelper.job then TestHelper.job:shutdown() end
 
     TestHelper.job = Job:new({
       command = 'nvim',
       args = { '--clean', '-u', 'specs/minimal_init.vim', '--listen', address },
-    }):start()
+    })
+    TestHelper.job:start()
   else
     local cmd = ('tmux respawn-pane -k -t .1 "nvim --clean -u specs/minimal_init.vim --listen %s"'):format(address)
     os.execute(cmd)
