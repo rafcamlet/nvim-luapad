@@ -1,0 +1,28 @@
+name: Specs
+
+on: [push, pull_request]
+
+jobs:
+  run_specs:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+      - run: date +%F > todays-date
+      - name: restore build
+        uses: actions/cache@v2
+        with:
+          path: build
+          key: luapad-${{ hashFiles('todays-date') }}
+      - name: Setup
+        run: |
+          test -d build || {
+            mkdir -p build
+            wget https://github.com/neovim/neovim/releases/download/nightly/nvim.appimage
+            chmod +x nvim.appimage
+            mv nvim.appimage ./build/nvim
+          }
+          git clone --depth 1 https://github.com/nvim-lua/plenary.nvim.git vendor/plenary/
+      - name: Run tests
+        run: |
+          export PATH="${PWD}/build/:${PATH}"
+          HEADLESS=true make

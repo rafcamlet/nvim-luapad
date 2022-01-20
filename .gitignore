@@ -1,2 +1,4 @@
 tmp/*
 !tmp/.keep
+vendor/*
+!vendor/.keep
