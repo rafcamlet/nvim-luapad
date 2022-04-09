@@ -32,10 +32,12 @@ local Config = {
   print_highlight = 'Comment',
   error_highlight = 'ErrorMsg',
   eval_on_move = false,
-  eval_on_change = true
+  eval_on_change = true,
+  split_orientation = 'vertical'
 }
 
 local function set_config(opts)
+  opts = opts or {}
   for k, v in pairs(opts) do Config[k] = v end
 end
 

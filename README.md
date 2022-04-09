@@ -34,7 +34,7 @@ With vim-plug:
 
 Luapadd provides three different commands, that will help you with developing neovim plugins in lua:
   - **Luapad** - which open interactive scratch buffer with real time evaluation.
-  - **LuaRun** - which run content of current buffer as lua script in new scope. You do not need to write file to disc or have to worry about overwriting functions in global scope. 
+  - **LuaRun** - which run content of current buffer as lua script in new scope. You do not need to write file to disc or have to worry about overwriting functions in global scope.
   - ~~**Lua** - which is extension of native lua command with function completion.~~ *This command will be removed in the next release, because the current version of Neovim has built-in cmd completion.*
 
 From version 0.2 luapad will move towards lua api exposure. Several useful functions are already available.
@@ -105,6 +105,7 @@ You can configure luapad via `require('luapad').setup({})` function (or its alia
 | error_highlight         | 'ErrorMsg'        | Highlight group used to coloring luapad error indicator                                                                                                                                                 |
 | on_init                 | function          | Callback function called after creating new luapad instance                                                                                                                                                                                                          |
 | context                 | {}                | The default context tbl in which luapad buffer is evaluated. Its properties will be available in buffer as "global" variables.
+| split_orientation       | 'vertical'        | The orientation of the split created by `Luapad`.                  |
 
 
 

@@ -1,4 +1,5 @@
 local set_config = require'luapad.config'.set_config
+local config = require'luapad.config'.config
 local vim_config_disabled_warn = require'luapad.config'.vim_config_disabled_warn
 
 local Evaluator = require'luapad.evaluator'
@@ -18,7 +19,12 @@ local function init()
   -- hacky solution to deal with native lsp
   remove_file(file_path)
   create_file(file_path)
-  vim.api.nvim_command('botright vsplit ' .. file_path)
+
+  local split_orientation = 'vsplit'
+  if config.split_orientation == 'horizontal' then
+      split_orientation = 'split'
+  end
+  vim.api.nvim_command('botright ' .. split_orientation .. ' ' .. file_path)
 
   local buf = vim.api.nvim_get_current_buf()
 
