@@ -94,30 +94,29 @@ end
 You can configure luapad via `require('luapad').setup({})` function (or its alias `config`). Configuration via vim globals is disabled. If you want to use old configuration method, please checkout version 0.2.
 
 
-| Name                    | default value | Description                                                                                                                                                                                             |
-| ---                     | ---               | ---                                                                                                                                                                                                     |
-| count_limit             | 200000            | Luapad uses count hook method to prevent infinite loops occurring during code execution. Setting count_limit too high will make Luapad laggy, setting it too low, may cause premature code termination. |
-| error_indicator         | true              | Show virtual text with error message (except syntax or timeout errors)                                                                                                                                  |
-| preview                 | true              | Show floating output window on cursor hold. It's a good idea to set low update time. For example: `let &updatetime = 300` You can jump to it by `^w` `w`                                                |
-| eval_on_change          | true              | Evaluate buffer content when it changes |
-| eval_on_move            | false             | Evaluate all luapad buffers when the cursor moves|
-| print_highlight         | 'Comment'         | Highlight group used to coloring luapad print output                                                                                                                                                    |
-| error_highlight         | 'ErrorMsg'        | Highlight group used to coloring luapad error indicator                                                                                                                                                 |
-| on_init                 | function          | Callback function called after creating new luapad instance                                                                                                                                                                                                          |
-| context                 | {}                | The default context tbl in which luapad buffer is evaluated. Its properties will be available in buffer as "global" variables.
-| split_orientation       | 'vertical'        | The orientation of the split created by `Luapad`.                  |
+| Name                    | default value | Description                                                                                                                                                                                                  |
+| ---                     | ---               | ---                                                                                                                                                                                                      |
+| count_limit             | 200000            | Luapad uses count hook method to prevent infinite loops occurring during code execution. Setting count_limit too high will make Luapad laggy, setting it too low, may cause premature code termination.  |
+| error_indicator         | true              | Show virtual text with error message (except syntax or timeout. errors)                                                                                                                                  |
+| preview                 | true              | Show floating output window on cursor hold. It's a good idea to set low update time. For example: `let &updatetime = 300` You can jump to it by `^w` `w`.                                                |
+| eval_on_change          | true              | Evaluate buffer content when it changes.                                                                                                                                                                 |
+| eval_on_move            | false             | Evaluate all luapad buffers when the cursor moves.                                                                                                                                                       |
+| print_highlight         | 'Comment'         | Highlight group used to coloring luapad print output.                                                                                                                                                    |
+| error_highlight         | 'ErrorMsg'        | Highlight group used to coloring luapad error indicator.                                                                                                                                                 |
+| on_init                 | function          | Callback function called after creating new luapad instance.                                                                                                                                             |
+| context                 | {}                | The default context tbl in which luapad buffer is evaluated. Its properties will be available in buffer as "global" variables.                                                                           |
+| split_orientation       | 'vertical'        | The orientation of the split created by `Luapad` command. Can be `vertical` or `horizontal`.                                                                                                             |
 
 
-
-
-Example configuration
+Example configuration (note it isn't the default one!)
 
 ```lua
-require('luapad').setup{
+require('luapad').setup {
   count_limit = 150000,
   error_indicator = false,
   eval_on_move = true,
   error_highlight = 'WarningMsg',
+  split_orientation = 'horizontal',
   on_init = function()
     print 'Hello from Luapad!'
   end,
@@ -224,6 +223,8 @@ Luapad separates errors into 3 categories:
 - Replace `g:luapad_status` and `g:luapad_msg` variables by `status()` and `msg()` lua functions.
 - Now luapad print function print also nil values
 
+### TODO
+- Allow changing orientation of the preview window
 
 ### Shameless self promotion
 
