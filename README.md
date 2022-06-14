@@ -27,7 +27,7 @@ All thoughts or/and error reports are welcome.
 With vim-plug:
 
 ```
-    Plug "rafcamlet/nvim-luapad"
+    Plug 'rafcamlet/nvim-luapad'
 ```
 
 ### Usage
