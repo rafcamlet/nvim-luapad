@@ -30,6 +30,14 @@ With vim-plug:
     Plug 'rafcamlet/nvim-luapad'
 ```
 
+With packer.nvim:
+
+```
+    use { 'rafcamlet/nvim-luapad', requires = "antoinemadec/FixCursorHold.nvim" }
+```
+
+`CursorHold` event is currently bugged in neovim ([issue](https://github.com/neovim/neovim/issues/12587)). It's recomended to use this fix: [antoinemadec/FixCursorHold.nvim](https://github.com/antoinemadec/FixCursorHold.nvim) 
+
 ### Usage
 
 Luapadd provides three different commands, that will help you with developing neovim plugins in lua:
