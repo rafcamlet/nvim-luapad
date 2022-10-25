@@ -30,13 +30,17 @@ With vim-plug:
     Plug 'rafcamlet/nvim-luapad'
 ```
 
-With packer.nvim:
+With packer.nvim and Neovim >= [v0.8.0](https://github.com/neovim/neovim/releases/tag/v0.8.0):
+
+```
+    use 'rafcamlet/nvim-luapad'
+```
+
+In versions of Neovim prior to v0.8.0, the `CursorHold` event is [buggy](https://github.com/neovim/neovim/issues/12587). If you're using an older version, it's recomended to use [this fix](https://github.com/antoinemadec/FixCursorHold.nvim):
 
 ```
     use { 'rafcamlet/nvim-luapad', requires = "antoinemadec/FixCursorHold.nvim" }
 ```
-
-`CursorHold` event is currently bugged in neovim ([issue](https://github.com/neovim/neovim/issues/12587)). It's recomended to use this fix: [antoinemadec/FixCursorHold.nvim](https://github.com/antoinemadec/FixCursorHold.nvim) 
 
 ### Usage
 
