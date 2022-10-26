@@ -2,15 +2,15 @@
 
 Luapad runs your code in context with overwritten print function and displays the captured input as virtual text right there, where it was called - **in real time!**
 
-![Luapad print gif](/gifs/luapad_new.gif)
+![Luapad print demo](https://user-images.githubusercontent.com/8767998/198146427-c7488912-16e3-49de-811e-8bbc33c1f3da.gif)
 
-![Luapad function gif](/gifs/luapad_colors.gif)
+![luapad colors demo](https://user-images.githubusercontent.com/8767998/198146416-04e026ce-8966-4c57-afc0-12fb62d6cff1.gif)
 
 -------
 
 Luapad adds Lua command (as native lua command extension) with deep function completion.
 
-![Luapad nvim.split gif](/gifs/luapad_lua.gif)
+![luapad Lua demo](https://user-images.githubusercontent.com/8767998/198146413-d2026d9e-f266-478c-959a-1ac65061aec0.gif)
 
 -------
 
