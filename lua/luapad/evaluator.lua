@@ -2,7 +2,9 @@ local Config = require 'luapad.config'.config
 local set_config = require 'luapad.config'.set_config
 local State = require 'luapad.state'
 
-local parse_error = require'luapad.tools'.parse_error
+local tools = require'luapad.tools'
+local parse_error = tools.parse_error
+local table_find = tools.table_find
 
 local ns = vim.api.nvim_create_namespace('luapad_namespace')
 
@@ -102,6 +104,11 @@ function Evaluator:eval()
   self.output = {}
 
   local code = vim.api.nvim_buf_get_lines(self.buf, 0, -1, {})
+  local profile_line, profile_line_num = table_find(code, function (line)
+    return line:match("-- PROFILE") ~= nil
+  end)
+  local profile_iterations = tonumber(profile_line and profile_line:match("-- PROFILE (%d.)") or 10)
+
   local f, result = loadstring(table.concat(code, '\n'))
 
   if not f then
@@ -112,6 +119,22 @@ function Evaluator:eval()
   end
 
   setfenv(f, context)
+  if profile_line then
+    local times = 0
+    local hrtime = vim.loop.hrtime
+    for i=1,profile_iterations do
+      local start = hrtime()
+      self:tcall(f)
+      local stop = hrtime()
+      local diff = (stop - start) / 1e6
+      times = times + diff
+    end
+    self.output = {}
+
+    if not self.output[profile_line_num] then self.output[profile_line_num] = {} end
+    table.insert(self.output[profile_line_num], { ("Luapad: Ran in %s ms"):format(times / profile_iterations) })
+  end
+
   self:tcall(f)
   self:update_view()
 end
