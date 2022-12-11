@@ -33,7 +33,8 @@ local Config = {
   error_highlight = 'ErrorMsg',
   eval_on_move = false,
   eval_on_change = true,
-  split_orientation = 'vertical'
+  split_orientation = 'vertical',
+  wipe = true
 }
 
 local function set_config(opts)

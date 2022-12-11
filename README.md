@@ -118,6 +118,7 @@ You can configure luapad via `require('luapad').setup({})` function (or its alia
 | on_init                 | function          | Callback function called after creating new luapad instance.                                                                                                                                             |
 | context                 | {}                | The default context tbl in which luapad buffer is evaluated. Its properties will be available in buffer as "global" variables.                                                                           |
 | split_orientation       | 'vertical'        | The orientation of the split created by `Luapad` command. Can be `vertical` or `horizontal`.                                                                                                             |
+| wipe                    | true              | The Luapad buffer by default is wiped out after closing/loosing a window. If you're used to switching buffers, and you want to keep Luapad instance alive in the background, set it to false. |
 
 
 Example configuration (note it isn't the default one!)

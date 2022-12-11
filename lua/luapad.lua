@@ -1,5 +1,5 @@
 local set_config = require'luapad.config'.set_config
-local config = require'luapad.config'.config
+local Config = require'luapad.config'.config
 local vim_config_disabled_warn = require'luapad.config'.vim_config_disabled_warn
 
 local Evaluator = require'luapad.evaluator'
@@ -21,7 +21,7 @@ local function init()
   create_file(file_path)
 
   local split_orientation = 'vsplit'
-  if config.split_orientation == 'horizontal' then
+  if Config.split_orientation == 'horizontal' then
       split_orientation = 'split'
   end
   vim.api.nvim_command('botright ' .. split_orientation .. ' ' .. file_path)
@@ -32,8 +32,14 @@ local function init()
 
   vim.api.nvim_buf_set_option(buf, 'swapfile', false)
   vim.api.nvim_buf_set_option(buf, 'filetype', 'lua')
-  vim.api.nvim_buf_set_option(buf, 'bufhidden', 'wipe')
+  vim.api.nvim_buf_set_option(buf, 'bufhidden', Config.wipe and 'wipe' or 'hide')
   vim.api.nvim_command('au QuitPre <buffer> set nomodified')
+
+  if Config.wipe then
+    -- Always try to keep file as modified so it can't be accidentally switched
+    vim.api.nvim_buf_set_option(buf, 'modified', true)
+    vim.api.nvim_command([[au BufWritePost <buffer> lua vim.schedule(function() vim.api.nvim_buf_set_option(0, 'modified', true) end)]])
+  end
 end
 
 local function attach(opts)
