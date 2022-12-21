@@ -31,6 +31,7 @@ local Config = {
   count_limit = 2 * 1e5,
   print_highlight = 'Comment',
   error_highlight = 'ErrorMsg',
+  benchmark_highlight = "IncSearch",
   eval_on_move = false,
   eval_on_change = true,
   split_orientation = 'vertical',
