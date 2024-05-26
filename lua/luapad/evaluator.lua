@@ -1,6 +1,7 @@
 local Config = require 'luapad.config'.config
 local set_config = require 'luapad.config'.set_config
 local State = require 'luapad.state'
+local utils = require 'luapad.utils'
 
 local parse_error = require'luapad.tools'.parse_error
 
@@ -133,7 +134,7 @@ function Evaluator:preview()
   vim.api.nvim_buf_set_option(buf, 'bufhidden', 'wipe')
   vim.api.nvim_buf_set_option(buf, 'filetype', 'lua')
 
-  local content = vim.split(table.concat(vim.tbl_flatten(self.output[line]), "\n"), "\n")
+  local content = vim.split(table.concat(utils.tbl_flatten(self.output[line]), "\n"), "\n")
 
   vim.api.nvim_buf_set_lines(buf, 0, -1, false, content)
 
