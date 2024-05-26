@@ -3,7 +3,11 @@ local set_config = require 'luapad.config'.set_config
 local State = require 'luapad.state'
 local utils = require 'luapad.utils'
 
-local parse_error = require'luapad.tools'.parse_error
+local tools = require'luapad.tools'
+local Benchmark = require'luapad.benchmark'
+local parse_error = tools.parse_error
+local table_find = tools.table_find
+
 
 local ns = vim.api.nvim_create_namespace('luapad_namespace')
 
@@ -52,7 +56,6 @@ function Evaluator:tcall(fun)
     if result:find('LuapadTimeoutError') then
       self.statusline.status = 'timeout'
     else
-      print(result)
       self.statusline.status = 'error'
       local line, error_msg = parse_error(result)
       self.statusline.msg = ('%s: %s'):format((line or ''), (error_msg or ''))
@@ -103,6 +106,11 @@ function Evaluator:eval()
   self.output = {}
 
   local code = vim.api.nvim_buf_get_lines(self.buf, 0, -1, {})
+  local benchmark_line, benchmark_line_num = table_find(code, function (line)
+    return line:match("-- #luapad:benchmark") ~= nil
+  end)
+  local benchmark_iterations = tonumber(benchmark_line and benchmark_line:match("-- #luapad:benchmark (%d+)") or 10)
+
   local f, result = loadstring(table.concat(code, '\n'))
 
   if not f then
@@ -113,6 +121,14 @@ function Evaluator:eval()
   end
 
   setfenv(f, context)
+  if benchmark_line ~= nil then
+    print(("%s %s"):format(type(benchmark_line_num), benchmark_line_num))
+    local handle_result = function(result_line)
+      self:set_virtual_text(benchmark_line_num - 1, result_line, Config.benchmark_highlight)
+    end
+    Benchmark:start_benchmark(f, benchmark_iterations, handle_result)
+  end
+
   self:tcall(f)
   self:update_view()
 end

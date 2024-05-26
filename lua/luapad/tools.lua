@@ -37,6 +37,15 @@ local function print_error(str)
   vim.api.nvim_command('echohl None')
 end
 
+local function table_find(tbl, predicate)
+  for i, v in ipairs(tbl) do
+    if predicate(v) then
+      return v, i
+    end
+  end
+  return nil
+end
+
 
 return {
   parse_error = parse_error,
@@ -45,5 +54,6 @@ return {
   create_file = create_file,
   remove_file = remove_file,
   print_warn = print_warn,
-  print_error = print_error
+  print_error = print_error,
+  table_find = table_find
 }

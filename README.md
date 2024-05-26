@@ -201,6 +201,16 @@ require('galaxyline').section.right[1] = {
 </details>
 <br>
 
+### Profiler
+
+Luapad can profile the contents of the buffers. Add the following line to your buffer as a comment:
+
+```lua
+-- PROFILE 
+
+-- or to specify the number of times the buffer should be run: (defaults to 10)
+-- PROFILE 1000
+```
 
 ### Types of errors
 
