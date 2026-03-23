@@ -1,4 +1,4 @@
-State = {
+local State = {
   instances = {}
 }
 

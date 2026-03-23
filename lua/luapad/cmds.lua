@@ -2,11 +2,11 @@ local State = require('luapad.state')
 local Config = require'luapad.config'.config
 
 local function on_cursor_hold(buf)
-  if Config.preview then State.instances[buf]:preview() end
+  if Config.preview and State.instances[buf] then State.instances[buf]:preview() end
 end
 
 local function on_luapad_cursor_moved(buf)
-  State.instances[buf]:close_preview()
+  if State.instances[buf] then State.instances[buf]:close_preview() end
 end
 
 local function on_cursor_moved()

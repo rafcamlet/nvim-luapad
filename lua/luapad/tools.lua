@@ -17,7 +17,8 @@ local function path(...)
 end
 
 local function create_file(f)
-  local fd = vim.loop.fs_open(f, "w", 438)
+  local fd, err = vim.loop.fs_open(f, "w", 438)
+  if not fd then error('luapad: failed to create file: ' .. (err or f)) end
   vim.loop.fs_close(fd)
 end
 
